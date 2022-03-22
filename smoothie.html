@@ -1,0 +1,123 @@
+<head>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        .ingredients {
+            height:100%;
+            width:25%;
+            position:absolute;
+            left:0;
+            background-color: #fff2ccff;
+            text-indent: 15px;
+            top:0;
+            color:#4a86e8ff;
+        }
+        .steps {
+            height:100%;
+            width:75%;
+            position:absolute;
+            right:0;
+            background-color: #4a86e8ff;
+            text-indent: 15px;
+            top:0;
+            color:#fff2ccff;
+        }
+        ul {
+            list-style: none;
+            padding-left:0;
+            text-indent: 1em;
+        }
+        li {
+            padding-bottom:5px;
+        }
+        h1 {
+            font-size: 3.5vw;
+        }
+        h3 {
+            font-size: 2.5vw;
+        }
+        li {
+            font-size: 1.3vw;
+        }
+        p {
+            font-size: 1.3vw;
+        }
+    </style>
+</head>
+<div class="ingredients">
+    <h1>Ingredients</h1>
+    <h3>Fruits</h3>
+    <ul id="fruits"></ul>
+    <h3>Other Ingredients</h3>
+    <ul id="other"></ul>
+    <h3>Supplies</h3>
+    <ul>
+        <li>Blender</li>
+        <li>Measuring cup</li>
+        <li>Measuring spoon</li>
+    </ul>
+</div>
+<div class="steps">
+    <h1 id="dish-name">Grape-Banana Sorbet</h1>
+    <div id="steps"></div>
+</div>
+<script>
+    pos_fruits = ["Blueberries", "Strawberries", "Pineberries", "Pineapple", "Banana", "Grape"]
+    colors = ["#4a86e8ff", "#e11183ff", "#ffffb9ff", "#ebec54ff", "#f3f40eff", "#3a0ef4ff"]
+    types = ["Smoothie", "Sorbet"]
+    types_others = [["2 cups fruit juice"], ["3 cups ice", "3 tablespoons granulated cane sugar", "1 cup fruit juice"]]
+    steps = [[""], ["Place 3 tablespoons of sugar into the blender.", "Add fruits into the blender.", "Add 1 cup fruit juice into the blender.", "Add ice into the blender.", "Blend on cold desert setting. Use blender tamper to thoroughly blend all ingredients.", "Serve fresh, or refrigerate (for up to an hour) or freeze (for longer than an hour)."]]
+    fruits = ""
+    fruitsStr = ""
+    fruits_list = []
+    largest_amount = ["", 0]
+    second_largest_amount = ["", 0]
+    type = ""
+    while (fruits_list.length < 2) {
+        for (let i=0; i<pos_fruits.length; i++) {
+            yes = Math.random()
+            if (Math.round(yes) && !fruits_list.includes(pos_fruits[i])) {
+                if (fruits_list.length < 5) {
+                    amount = Math.ceil(Math.random() * 5)
+                    if (amount > 1) {
+                        fruits += `<li>${amount} cups of ${pos_fruits[i].toLowerCase()}</li>`
+                        if (fruitsStr.length !=0) {
+                            fruitsStr += `+ ${amount} cups of ${pos_fruits[i].toLowerCase()} `
+                        } else {
+                            fruitsStr += `${amount} cups of ${pos_fruits[i].toLowerCase()} `
+                        }
+                    } else {
+                        fruits += `<li>${amount} cup of ${pos_fruits[i].toLowerCase()}</li>`
+                        fruitsStr += `+ ${amount} cup of ${pos_fruits[i].toLowerCase()} `
+                    }
+                    fruits_list.push([amount, pos_fruits[i]])
+                    if (amount > largest_amount[1]) {
+                        second_largest_amount = largest_amount
+                        largest_amount = [pos_fruits[i], amount]
+                    } else if (amount > second_largest_amount[1]) {
+                        second_largest_amount = [pos_fruits[i], amount]
+                    }
+                }
+            }
+        }
+    }
+    tI = Math.floor(Math.random()*types.length)
+    type = types[tI]
+    type_others_str = ""
+    types_others[tI].forEach((element) => {
+        type_others_str += `<li>${element}</li>`
+    })
+    document.getElementById("other").innerHTML = type_others_str
+    document.getElementById("fruits").innerHTML = fruits
+    document.getElementsByClassName("ingredients")[0].style.background = colors[pos_fruits.indexOf(second_largest_amount[0])]
+    document.getElementsByClassName("ingredients")[0].style.color = colors[pos_fruits.indexOf(largest_amount[0])]
+    document.getElementsByClassName("steps")[0].style.background = colors[pos_fruits.indexOf(largest_amount[0])]
+    document.getElementsByClassName("steps")[0].style.color = colors[pos_fruits.indexOf(second_largest_amount[0])]
+    document.getElementById("dish-name").innerText = largest_amount[0] + " and " +  second_largest_amount[0] + " " + type
+    stepsStr = ""
+    steps[tI].forEach((element, index) => {
+        stepsStr += `<h3>Step ${index+1}</h3><p>${element.replace("fruits", fruitsStr)}</p>`
+    })
+    document.getElementById("steps").innerHTML = stepsStr
+</script>
